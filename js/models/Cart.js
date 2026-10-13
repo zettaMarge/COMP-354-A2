@@ -28,7 +28,8 @@ class Cart {
     }
 
     /**
-     * Adds a new item to the cart, if the cart is empty OR that item is from the same restaurant as the other items in the cart
+     * Adds an item to the cart if the cart is empty OR that item is from the same restaurant as the other items in the cart.
+     * If the item is already in the cart then its quantity is increased
      * @param {MenuItem} menuItem Menu item to be added
      * @param {number} qty How many of that item is added to the cart
      * @returns if the item was successfully added
@@ -37,7 +38,12 @@ class Cart {
         if (this.#restaurantId != null && this.#restaurantId !== "" && this.#restaurantId !== menuItem.restaurantId) {
             return false;
         }
-        else if (this.#restaurantId == null || this.#restaurantId === "") {
+
+        if (this.#items.has(menuItem.id)) {
+            return increaseItemQuantity(menuItem.id, qty);
+        }
+        
+        if (this.#restaurantId == null || this.#restaurantId === "") {
             this.#restaurantId = menuItem.#restaurantId;
         }
 
@@ -51,7 +57,7 @@ class Cart {
      * @returns if the item was successfully removed
      */
     removeItem(menuItemId) {
-        if (this.#items.get(menuItemId) !== undefined) {
+        if (this.#items.has(menuItemId)) {
             this.#items.delete(menuItemId);
 
             if (this.#items.size === 0) {
@@ -67,18 +73,17 @@ class Cart {
     /**
      * Increases the quantity of an item in the cart
      * @param {string} menuItemId Which menu item to increase the quantity of
-     * @param {number} qty by how much (min: 1)
+     * @param {number} inc by how much (min: 1)
      * @returns if the quantity was successfully increased
      */
-    increaseItemQuantity(menuItemId, qty = 1) {
-        if (qty < 1) {
+    increaseItemQuantity(menuItemId, inc = 1) {
+        if (inc < 1) {
             return false;
         }
 
-        let oldQty = this.#items.get(menuItemId);
-
-        if (oldQty !== undefined) {
-            this.#items.set(menuItemId, parseInt(oldQty) + qty)
+        if (this.#items.has(menuItemId)) {
+            let oldQty = parseInt(this.#items.get(menuItemId));
+            this.#items.set(menuItemId, oldQty + inc)
             return true;
         }
 
@@ -88,21 +93,22 @@ class Cart {
     /**
      * Decreases the quantity of an item in the cart
      * @param {string} menuItemId Which menu item to decrease the quantity of
-     * @param {number} qty by how much (min: 1)
+     * @param {number} dec by how much (min: 1)
      * @returns if the quantity was successfully decreased
      */
-    decreaseItemQuantity(menuItemId, qty) {
-        if (qty < 1) {
+    decreaseItemQuantity(menuItemId, dec) {
+        if (dec < 1) {
             return false;
         }
 
-        let oldQty = this.#items.get(menuItemId);
-        
-        if (oldQty !== undefined && (parseInt(oldQty) === 1 || qty >= parseInt(oldQty))) {  
-            return removeItem(menuItemId);
-        }
-        else if (oldQty !== undefined) {
-            this.#items.set(menuItemId, parseInt(oldQty) - qty);
+        if (this.#items.has(menuItemId)) {
+            let oldQty = parseInt(this.#items.get(menuItemId));
+
+            if (dec >= oldQty) {
+                return removeItem(menuItemId);
+            }
+            
+            this.#items.set(menuItemId, oldQty - dec);
             return true;
         }
 
