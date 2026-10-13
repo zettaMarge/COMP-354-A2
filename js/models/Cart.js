@@ -9,7 +9,7 @@ class Cart {
     #items;
 
     constructor() {
-        this.#restaurantId = "";
+        this.#restaurantId = null;
         this.#items = new Map();
     }
 
@@ -35,7 +35,7 @@ class Cart {
      * @returns if the item was successfully added
      */
     addItem(menuItem, qty) {
-        if (this.#restaurantId != null && this.#restaurantId !== "" && this.#restaurantId !== menuItem.restaurantId) {
+        if (this.#restaurantId != null && this.#restaurantId !== menuItem.restaurantId) {
             return false;
         }
 
@@ -43,7 +43,7 @@ class Cart {
             return increaseItemQuantity(menuItem.id, qty);
         }
         
-        if (this.#restaurantId == null || this.#restaurantId === "") {
+        if (this.#restaurantId == null) {
             this.#restaurantId = menuItem.#restaurantId;
         }
 
@@ -61,7 +61,7 @@ class Cart {
             this.#items.delete(menuItemId);
 
             if (this.#items.size === 0) {
-                this.#restaurantId = "";
+                this.#restaurantId = null;
             }
 
             return true;
@@ -141,6 +141,6 @@ class Cart {
      */
     clear() {
         this.#items.clear();
-        this.#restaurantId = "";
+        this.#restaurantId = null;
     }
 }
