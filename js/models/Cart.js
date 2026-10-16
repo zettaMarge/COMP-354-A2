@@ -4,7 +4,7 @@
  * @property {Map<string, number>} items (private) Dictionary mapping MenuItems Ids to the quantity of it being ordered
  * @author Marjorie D.
  */
-class Cart {
+export default class Cart {
     #restaurantId;
     #items;
 
@@ -96,7 +96,7 @@ class Cart {
      * @param {number} dec by how much (min: 1)
      * @returns if the quantity was successfully decreased
      */
-    decreaseItemQuantity(menuItemId, dec) {
+    decreaseItemQuantity(menuItemId, dec = 1) {
         if (dec < 1) {
             return false;
         }
@@ -130,10 +130,16 @@ class Cart {
     }
 
     /**
-     * @returns if the cart is empty
+     * @returns how many items are in the cart
      */
-    isEmpty() {
-        return this.#items.size === 0;
+    size() {
+        let total = 0;
+
+        this.#items.forEach(function(value, key) {
+            total += value;
+        });
+
+        return total;
     }
 
     /**
