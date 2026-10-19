@@ -1,0 +1,23 @@
+.order {
+
+    width: 300px;
+    height: 400px;
+
+    box-sizing: border-box;
+
+    outline: 3px solid;
+    padding: 20px;
+    border-radius: 12px;
+    
+}
+
+#orders-container {
+    display: flex;
+    gap: 40px;
+    padding: 20px;
+
+}
+
+h1 {
+    padding: 15px;
+}
