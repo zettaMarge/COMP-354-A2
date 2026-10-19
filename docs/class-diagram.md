@@ -17,22 +17,29 @@ classDiagram
         +menuItems: MenuItem[]
         +getAvailableItems() MenuItem[]
         +findItem(itemId) MenuItem or undefined
+        +hasBanner() boolean
     }
     class MenuItem {
         +id: string
+        +restaurantId: string
         +name: string
         +ingredients: string[]
         +price: number
         +imageUrl: string
         +available: boolean
+        +hasImage() boolean
     }
     class Cart {
-        +restaurantId: string or null
-        +items: OrderItem[]
-        +addItem(menuItem, restaurantId, qty)
-        +removeItem(menuItemId)
+        -restaurantId: string or null
+        -items: Map~string, number~
+        +getRestaurantId() string or null
+        +getItems() Map~string, number~
+        +addItem(menuItem, qty) boolean
+        +removeItem(menuItemId) boolean
+        +increaseItemQuantity(menuItemId, inc) boolean
+        +decreaseItemQuantity(menuItemId, dec) boolean
         +getTotal() number
-        +isEmpty() boolean
+        +size() number
         +clear()
     }
     class Order {
@@ -63,9 +70,8 @@ classDiagram
         +next(status) OrderStatus
     }
     class DataStore {
-        +constructor(storage)
-        +getRestaurants() Restaurant[]
-        +getRestaurant(id) Restaurant
+        +getRestaurants()$ Restaurant[]
+        +getRestaurant(id)$ Restaurant or undefined
         +saveOrder(order)
         +getOrder(id) Order
         +getOrdersForRestaurant(id) Order[]
@@ -78,7 +84,7 @@ classDiagram
         +updateStatus(orderId) Order
     }
     Restaurant "1" --> "*" MenuItem
-    Cart "1" --> "*" OrderItem
+    Cart "1" ..> "*" MenuItem : stores ids and quantities
     Order "1" --> "*" OrderItem
     Order --> OrderStatus
     OrderService --> DataStore
@@ -121,12 +127,15 @@ Use these behaviours as the basis for your tests.
 
 ### Cart
 
-1. Adding an item that's already in the cart increases its quantity instead of adding a second line.
-2. Adding an item from a different restaurant than the one already in the cart throws an error.
-3. Adding a quantity below 1 throws an error.
+1. The cart stores a map of menu item id to quantity. It doesn't store copies of the items.
+2. `addItem(menuItem, qty)` takes the restaurant from `menuItem.restaurantId`. Adding an item that's already in the cart increases its quantity instead of adding a second line.
+3. Adding an item from a different restaurant than the one already in the cart returns `false` and changes nothing.
 4. An empty cart has `restaurantId` set to `null`. The first item added sets it.
-5. `removeItem(menuItemId)` removes the whole line. If that leaves the cart empty, `restaurantId` goes back to `null`.
-6. `clear()` empties the cart and resets `restaurantId` to `null`.
+5. `increaseItemQuantity` and `decreaseItemQuantity` return `false` if the amount is below 1 or the item isn't in the cart. Decreasing to 0 or less removes the item.
+6. `removeItem(menuItemId)` removes the whole line. If that leaves the cart empty, `restaurantId` goes back to `null`.
+7. `getTotal()` looks up each item's current price with `DataStore.getRestaurant(restaurantId).findItem(id)`.
+8. `size()` is the total number of units in the cart, so 2 maki and 1 soup is 3.
+9. `clear()` empties the cart and resets `restaurantId` to `null`.
 
 ### Order
 
@@ -144,8 +153,9 @@ Use these behaviours as the basis for your tests.
 
 ### DataStore
 
-1. The constructor takes a storage object with `getItem()` and `setItem()` methods. In the browser, we pass `localStorage`. In tests, we pass a fake storage object to keep the tests independent of browser storage.
-2. Everything is saved as JSON, but the getters return actual class instances, including nested menu and order items, rather than plain objects. When loading an order, `pickupTime` and `createdAt` are restored as `Date` objects.
+1. `getRestaurants()` and `getRestaurant(id)` are static, so they're called as `DataStore.getRestaurant("r1")` without creating a DataStore. They read the sample restaurants in `js/data/seedData.js`. `getRestaurant` returns `undefined` for an unknown id.
+2. The order and cart methods save to `localStorage`. In tests, use a fake storage object with `getItem()` and `setItem()` so the tests don't depend on the browser.
+3. Everything is saved as JSON, but the getters return actual class instances, including nested menu and order items, rather than plain objects. When loading an order, `pickupTime` and `createdAt` are restored as `Date` objects.
 
 ## Conventions
 
