@@ -43,7 +43,7 @@ classDiagram
         +clear()
     }
     class Order {
-        +id: string
+        +orderId: string
         +restaurantId: string
         +customerName: string
         +items: OrderItem[]
