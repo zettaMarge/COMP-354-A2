@@ -1,0 +1,95 @@
+/* Styles for menu.html (#5 View Restaurant Menu) */
+
+#menu-page {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #222;
+}
+
+.banner {
+    width: 100%;
+    height: 180px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.banner-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f4a261, #e76f51);
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.restaurant-name {
+    margin: 16px 0 4px;
+}
+
+.restaurant-type {
+    margin: 0 0 8px;
+    color: #e76f51;
+    font-weight: bold;
+}
+
+.restaurant-description,
+.restaurant-hours,
+.restaurant-address {
+    margin: 4px 0;
+}
+
+.menu h2 {
+    margin-top: 24px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 8px;
+}
+
+.menu-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.menu-item-image {
+    width: 72px;
+    height: 72px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.menu-item-info {
+    flex: 1;
+}
+
+.menu-item-name {
+    margin: 0 0 4px;
+    font-size: 1.05rem;
+}
+
+.menu-item-ingredients {
+    margin: 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.menu-item-price {
+    margin: 0;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.menu-empty,
+.menu-not-found {
+    color: #666;
+}
