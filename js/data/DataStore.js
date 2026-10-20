@@ -1,14 +1,17 @@
 import { restaurants } from "./seedData.js";
-import { Order } from "../order.js";
-import { OrderItem } from "../orderItem.js";
+import { Order } from "../models/Order.js";
+import { OrderItem } from "../models/OrderItem.js";
 
 /**
  * Gives the rest of the app access to the platform's data.
  * For now restaurants come from seedData.js, so these methods are static and can be used
  * without creating a DataStore (ex: DataStore.getRestaurant("r1")).
  *
- * Saving and loading orders and the cart (saveOrder, getOrder, getOrdersForRestaurant,
- * loadCart, saveCart) still need to be added by whoever works on those PBIs.
+ * Saving and loading orders (getOrder and saveOrder) is implemented using localStorage.
+ * 
+ * Other methods (getOrdersForRestaurant, loadCart, saveCart) still need to be added by 
+ * whoever works on those PBIs.
+ * 
  * @author Jerwin C.
  */
 export class DataStore {
