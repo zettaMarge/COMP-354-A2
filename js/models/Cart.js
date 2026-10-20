@@ -1,30 +1,29 @@
+import { DataStore } from "../data/DataStore";
+
 /**
  * Customer's cart
  * @property {string || null} restaurantId (private) Which restaurant the customer wants to place an order to
  * @property {Map<string, number>} items (private) Dictionary mapping MenuItems Ids to the quantity of it being ordered
  * @author Marjorie D.
  */
-export default class Cart {
-    #restaurantId;
-    #items;
-
+export class Cart {
     constructor() {
-        this.#restaurantId = null;
-        this.#items = new Map();
+        this.restaurantId = null;
+        this.items = new Map();
     }
 
     /**
      * @returns which restaurant the cart has items from
      */
     getRestaurantId() {
-        return this.#restaurantId;
+        return this.restaurantId;
     }
 
     /**
      * @returns the items currently in the cart
      */
     getItems() {
-        return this.#items;
+        return this.items;
     }
 
     /**
@@ -35,19 +34,19 @@ export default class Cart {
      * @returns if the item was successfully added
      */
     addItem(menuItem, qty) {
-        if (this.#restaurantId != null && this.#restaurantId !== menuItem.restaurantId) {
+        if (this.restaurantId != null && this.restaurantId !== menuItem.restaurantId) {
             return false;
         }
 
-        if (this.#items.has(menuItem.id)) {
-            return increaseItemQuantity(menuItem.id, qty);
+        if (this.items.has(menuItem.id)) {
+            return this.increaseItemQuantity(menuItem.id, qty);
         }
         
-        if (this.#restaurantId == null) {
-            this.#restaurantId = menuItem.#restaurantId;
+        if (this.restaurantId == null) {
+            this.restaurantId = menuItem.restaurantId;
         }
 
-        this.#items.set(menuItem.id, qty);
+        this.items.set(menuItem.id, qty);
         return true;
     }
 
@@ -57,11 +56,11 @@ export default class Cart {
      * @returns if the item was successfully removed
      */
     removeItem(menuItemId) {
-        if (this.#items.has(menuItemId)) {
-            this.#items.delete(menuItemId);
+        if (this.items.has(menuItemId)) {
+            this.items.delete(menuItemId);
 
-            if (this.#items.size === 0) {
-                this.#restaurantId = null;
+            if (this.items.size === 0) {
+                this.restaurantId = null;
             }
 
             return true;
@@ -81,9 +80,9 @@ export default class Cart {
             return false;
         }
 
-        if (this.#items.has(menuItemId)) {
-            let oldQty = parseInt(this.#items.get(menuItemId));
-            this.#items.set(menuItemId, oldQty + inc)
+        if (this.items.has(menuItemId)) {
+            let oldQty = parseInt(this.items.get(menuItemId));
+            this.items.set(menuItemId, oldQty + inc)
             return true;
         }
 
@@ -101,14 +100,14 @@ export default class Cart {
             return false;
         }
 
-        if (this.#items.has(menuItemId)) {
-            let oldQty = parseInt(this.#items.get(menuItemId));
+        if (this.items.has(menuItemId)) {
+            let oldQty = parseInt(this.items.get(menuItemId));
 
             if (dec >= oldQty) {
-                return removeItem(menuItemId);
+                return this.removeItem(menuItemId);
             }
             
-            this.#items.set(menuItemId, oldQty - dec);
+            this.items.set(menuItemId, oldQty - dec);
             return true;
         }
 
@@ -120,9 +119,10 @@ export default class Cart {
      */
     getTotal() {
         let total = 0;
+        let id = this.restaurantId;
 
-        this.#items.forEach(function(value, key) {
-            let menuItem = DataStore.getRestaurant(this.#restaurantId).findItem(key);
+        this.items.forEach(function(value, key) {
+            let menuItem = DataStore.getRestaurant(id).findItem(key);
             total += menuItem.price * value;
         });
 
@@ -135,7 +135,7 @@ export default class Cart {
     size() {
         let total = 0;
 
-        this.#items.forEach(function(value, key) {
+        this.items.forEach(function(value, key) {
             total += value;
         });
 
@@ -146,7 +146,7 @@ export default class Cart {
      * Empties the cart & clears the restaurantId tracker
      */
     clear() {
-        this.#items.clear();
-        this.#restaurantId = null;
+        this.items.clear();
+        this.restaurantId = null;
     }
 }

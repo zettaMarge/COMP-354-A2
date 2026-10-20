@@ -1,5 +1,5 @@
 import { Cart } from "../models/Cart.js"
-//import { MenuItem } from "../models/MenuItem.js"
+import { MenuItem } from "../models/MenuItem.js"
 
 let testCart;
 let item1;
@@ -8,9 +8,9 @@ let item3;
 
 beforeAll(()=>{
     testCart = new Cart();
-    item1 = new MenuItem("uniqueId1", "restaurant1", "name", ["a", "b", "c"], 5);
-    item2 = new MenuItem("uniqueId2", "restaurant2", "name", ["a", "b", "c"], 5);
-    item3 = new MenuItem("uniqueId3", "restaurant1", "name", ["a", "b", "c"], 7.5);
+    item1 = new MenuItem("r1-1", "r1", "Salmon Maki", ["Salmon", "Rice", "Nori"], 8.5);
+    item2 = new MenuItem("r2-1", "r2", "Margherita Pizza", ["Tomato sauce", "Mozzarella", "Basil"], 13);
+    item3 = new MenuItem("r1-2", "r1", "California Roll", ["Crab", "Avocado", "Cucumber", "Rice", "Nori"], 9);
 });
 
 beforeEach(()=>{
@@ -100,7 +100,7 @@ test('getTotal', ()=>{
 
     testCart.addItem(item1, 2);
     testCart.addItem(item3, 1);
-    expect(testCart.getTotal()).toBe(17.5);
+    expect(testCart.getTotal()).toBe(26);
 });
 
 

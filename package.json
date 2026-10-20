@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "name": "comp-354-a2",
   "version": "1.0.0",
