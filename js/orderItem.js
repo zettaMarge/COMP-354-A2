@@ -1,4 +1,4 @@
-class OrderItem {
+export class OrderItem {
     constructor(menuItemId, name, unitPrice, quantity) {
         this.menuItemId = menuItemId;
         this.name = name;

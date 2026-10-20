@@ -1,9 +1,24 @@
 {
   "scripts": {
-      "test": "jest" 
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
-
-  "dependencies": {
+  "name": "comp-354-a2",
+  "version": "1.0.0",
+  "description": "This project uses Node.js and npm as its package manager.",
+  "main": "viewOrder.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zettaMarge/COMP-354-A2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/zettaMarge/COMP-354-A2/issues"
+  },
+  "homepage": "https://github.com/zettaMarge/COMP-354-A2#readme",
+  "devDependencies": {
     "jest": "^30.5.2"
   }
 }

@@ -1,3 +1,7 @@
+// import
+import { Order } from "./js/order.js";
+import { OrderItem } from "./js/orderItem.js";
+
 // order array
 const orders = [];
 

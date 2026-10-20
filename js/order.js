@@ -1,4 +1,4 @@
-class Order {
+export class Order {
 
     constructor(orderId, restaurantId, customerName, items, pickupTime, status, createdAt, seenByStaff) {
         this.orderId = orderId;
