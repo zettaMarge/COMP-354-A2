@@ -1,7 +1,7 @@
 import { OrderService } from "../services/OrderService.js";
 import { DataStore } from "../data/DataStore.js";
-import { Order } from "../order.js";
-import { OrderItem } from "../orderItem.js";
+import { Order } from "../models/Order.js";
+import { OrderItem } from "../models/OrderItem.js";
 
 function createFakeStorage() {
     // Store the saved information

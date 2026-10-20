@@ -1,6 +1,6 @@
 // test
-import { Order } from "../order.js";
-import { OrderItem } from "../orderItem.js";
+import { Order } from "../models/Order.js";
+import { OrderItem } from "../models/OrderItem.js";
 
 // test w/ 1 item
 describe("OrderItem tests", function() {

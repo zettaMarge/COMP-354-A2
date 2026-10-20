@@ -1,5 +1,5 @@
-import { Order } from "./order.js";
-import { OrderItem } from "./orderItem.js";
+import { Order } from "./models/Order.js";
+import { OrderItem } from "./models/OrderItem.js";
 import { OrderService } from "./services/OrderService.js";
 import { DataStore } from "./data/DataStore.js";
 
