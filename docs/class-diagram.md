@@ -43,7 +43,7 @@ classDiagram
         +clear()
     }
     class Order {
-        +orderId: string
+        +id: string
         +restaurantId: string
         +customerName: string
         +items: OrderItem[]
@@ -70,10 +70,12 @@ classDiagram
         +next(status) OrderStatus
     }
     class DataStore {
+        +storage: object
+        +constructor(storage)
         +getRestaurants()$ Restaurant[]
         +getRestaurant(id)$ Restaurant or undefined
         +saveOrder(order)
-        +getOrder(id) Order
+        +getOrder(id) Order or undefined
         +getOrdersForRestaurant(id) Order[]
         +loadCart() Cart
         +saveCart(cart)
