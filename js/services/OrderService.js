@@ -1,3 +1,5 @@
+import { Order } from "../models/Order.js";
+
 export class OrderService {
 
     constructor(dataStore) {
@@ -20,5 +22,22 @@ export class OrderService {
         this.dataStore.saveOrder(order);
 
         return order;
+    }
+
+    placeOrder(cart, customerName, pickupTime, payment) {
+        console.log(`TODO processing payment info: ${payment}`);
+        
+        let newOrder = new Order(
+            this.dataStore.getNextOrderId(),
+            cart.restaurantId,
+            cart.items,
+            customerName,
+            pickupTime,
+            "RECEIVED",
+            "dateTime",
+            false
+        );
+
+        this.dataStore.saveOrder(newOrder);
     }
 }

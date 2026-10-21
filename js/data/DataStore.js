@@ -116,6 +116,19 @@ export class DataStore {
         // Save the orders to localStorage
         this.storage.setItem("orders", JSON.stringify(orders));
     }
+
+    getNextOrderId() {
+        const savedOrders = this.storage.getItem("orders");
+
+        if(savedOrders) {
+            let orders = [];
+            orders = JSON.parse(savedOrders);
+            return "order" + orders.length;
+        }
+        else {
+            return "order0";
+        }
+    }
 }
 
 export default DataStore;
