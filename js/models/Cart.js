@@ -1,4 +1,4 @@
-import { DataStore } from "../data/DataStore";
+import { DataStore } from "../data/DataStore.js";
 
 /**
  * Customer's cart
@@ -33,7 +33,7 @@ export class Cart {
      * @param {number} qty How many of that item is added to the cart
      * @returns if the item was successfully added
      */
-    addItem(menuItem, qty) {
+    addItem(menuItem, qty = 1) {
         if (this.restaurantId != null && this.restaurantId !== menuItem.restaurantId) {
             return false;
         }

@@ -4,6 +4,11 @@
  * @author Jerwin C.
  */
 
+import { Cart } from "../models/Cart.js";
+const cart = new Cart();
+const modalID = "modal";
+let restaurant;
+
 /**
  * Escapes text before putting it in HTML, so names like "Mac & Cheese" display correctly
  * @param {string} text Text to escape
@@ -26,11 +31,74 @@ export function formatPrice(price) {
     return "$" + Number(price).toFixed(2);
 }
 
+function addItem(item, qty = 1) {
+    cart.addItem(item, qty);
+    refreshCartModal()
+}
+
+function removeItem(itemId) {
+    cart.removeItem(itemId)
+    refreshCartModal();
+}
+
+function increaseQuantity(itemId, qty = 1) {
+    cart.increaseItemQuantity(itemId, qty);
+    refreshCartModal();
+}
+
+function decreaseQuantity(itemId, qty = 1) {
+    cart.decreaseItemQuantity(itemId, qty)
+    refreshCartModal();
+}
+
+function clearCart() {
+    cart.clear();
+    refreshCartModal();
+}
+
+function refreshCartModal() {
+    const size = cart.size();
+    const modalContents = size > 0 ? `<ul>${cart.items.forEach(function(value, key) {buildCartModalItem(key, value)})}</ul>` : "Cart is currently empty.";
+
+    const content = `
+    <dialog id="cart-modal">
+        <button commandfor="cart-modal" command="close">X</button>
+        <div class="modalContainer"> 
+            ${modalContents}
+        </div>
+        <div class="modalFooter">
+            <div>Total: ${formatPrice(cart.getTotal())}</div>
+            <button onClick="clearCart" ${size == 0 ? "disabled": ""}>Clear Cart</button>
+            <button onClick="" ${size == 0 ? "disabled": ""}>Place Order</button>
+        </div>
+    </dialog>
+    `;
+
+    const div = document.getElementById(modalID);
+    if (div != null) {
+        div.innerHTML = content;
+    }
+    
+    return content;
+}
+
+function buildCartModalItem(itemId, qty) {
+    const item = restaurant.findItem(itemId);
+    
+    return `
+    <li>
+        ${escapeHtml(item.name)} ... x${qty} : ${formatPrice(item.price * qty)}
+        <button onClick="increaseQuantity(${item.id})">+</button>
+        <button onClick="removeItem(${item.id})">Remove</button>
+        <button onClick="decreaseQuantity(${item.id})">-</button>
+    </li>
+    `;
+}
+
 /**
- * @param {Restaurant} restaurant Restaurant to show at the top of the menu
  * @returns HTML for the banner, name, type, description, working hours and address
  */
-export function buildRestaurantHeaderHtml(restaurant) {
+export function buildRestaurantHeaderHtml() {
     const banner = restaurant.hasBanner()
         ? `<img class="banner" src="${escapeHtml(restaurant.bannerUrl)}" alt="${escapeHtml(restaurant.name)} banner">`
         : `<div class="banner banner-placeholder" aria-hidden="true">${escapeHtml(restaurant.name)}</div>`;
@@ -63,24 +131,28 @@ export function buildMenuItemHtml(item) {
                 <p class="menu-item-ingredients">${item.ingredients.map(escapeHtml).join(", ")}</p>
             </div>
             <p class="menu-item-price">${formatPrice(item.price)}</p>
-            <div class="menu-item-actions"></div>
+            <div class="menu-item-actions">
+                <button onClick="addItem(item)">+</button>
+            </div>
         </li>`;
 }
 
 /**
- * @param {Restaurant} restaurant Restaurant whose menu to show
+ * @param {Restaurant} r Restaurant whose menu to show
  * @returns HTML for the whole menu page, only listing items that are available
  */
-export function buildMenuHtml(restaurant) {
+export function buildMenuHtml(r) {
+    restaurant = r;
     const items = restaurant.getAvailableItems();
     const list = items.length > 0
         ? `<ul class="menu-items">${items.map(buildMenuItemHtml).join("")}</ul>`
         : `<p class="menu-empty">This restaurant has no items available right now.</p>`;
 
     return `
-        ${buildRestaurantHeaderHtml(restaurant)}
+        ${buildRestaurantHeaderHtml()}
+        <div id="${modalID}">${refreshCartModal()}</div>
         <section class="menu">
-            <h2>Menu</h2>
+            <h2>Menu   |  <button command="show-modal" commandfor="cart-modal">View Cart</button></h2>
             ${list}
         </section>`;
 }
