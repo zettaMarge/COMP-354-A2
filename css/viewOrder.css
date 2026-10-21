@@ -1,7 +1,7 @@
 .order {
 
     width: 300px;
-    height: 400px;
+    min-height: 400px;
 
     box-sizing: border-box;
 
